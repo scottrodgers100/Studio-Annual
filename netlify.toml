@@ -1,0 +1,11 @@
+[build]
+    functions = "netlify/functions"
+    publish = "."
+  
+  [[plugins]]
+    package = "@netlify/plugin-functions-install-core"
+  
+  [[headers]]
+    for = "/netlify/functions/*"
+    [headers.values]
+      Access-Control-Allow-Origin = "*"
