@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annual Review Survey — Airstudio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1410; --paper: #f5f0e8; --warm: #f0e8d8; --accent: #c8410a;
+  --accent-light: #e8622a; --muted: #8a7e72; --border: #d8cfc2;
+  --success: #2d7a4f; --surface: #fdfaf5; --badge-prod: #1a3a5c; --badge-train: #3a1a2c;
+  --staff: #1a3a4a; --photog: #3a1a0a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+/* ── HEADER ── */
+.header { background: var(--ink); color: var(--paper); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 100; }
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.header-logo { width: 28px; height: 28px; background: var(--accent); border-radius: 4px; display: grid; place-items: center; }
+.header-logo svg { width: 15px; height: 15px; }
+.header-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+.header-nav { display: flex; gap: 2px; align-items: center; }
+.nav-btn { background: none; border: 1px solid transparent; color: var(--paper); padding: 5px 13px; border-radius: 4px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.81rem; font-weight: 500; opacity: 0.55; transition: all 0.15s; }
+.nav-btn:hover { opacity: 0.9; border-color: rgba(255,255,255,0.2); }
+.nav-btn.active { opacity: 1; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+.session-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-left: 6px; }
+.badge-admin { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+/* ── LOCK SCREEN ── */
+.lock-screen { position: fixed; inset: 0; background: var(--ink); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.lock-box { background: var(--surface); border-radius: 14px; padding: 38px 40px; width: 380px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); text-align: center; }
+.lock-logo { width: 52px; height: 52px; background: var(--accent); border-radius: 10px; display: grid; place-items: center; margin: 0 auto 16px; }
+.lock-logo svg { width: 26px; height: 26px; }
+.lock-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 4px; }
+.lock-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; }
+.lock-role-tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+.lock-role-tab { flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 7px; background: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+.lock-role-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.lock-field { text-align: left; margin-bottom: 12px; }
+.lock-field label { display: block; font-size: 0.77rem; font-weight: 600; margin-bottom: 5px; }
+.lock-field input { width: 100%; padding: 9px 13px; border: 1px solid var(--border); border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
+.lock-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,65,10,0.08); }
+.lock-error { font-size: 0.78rem; color: #dc2626; margin-bottom: 10px; min-height: 18px; }
+.lock-btn { width: 100%; padding: 10px; background: var(--accent); color: #fff; border: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.lock-btn:hover { background: var(--accent-light); }
+.lock-hint { font-size: 0.71rem; color: var(--muted); margin-top: 12px; line-height: 1.5; }
+
+/* ── LAYOUT ── */
+.app { max-width: 900px; margin: 0 auto; padding: 36px 24px 60px; }
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── PAGE HEADER ── */
+.page-header { margin-bottom: 28px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 5px; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; padding: 3px 10px; border-radius: 20px; margin-bottom: 9px; }
+.ey-admin { background: #7c3aed; }
+.ey-staff { background: var(--staff); }
+.ey-photog { background: var(--photog); }
+.ey-responses { background: #1a4a3a; }
+.page-title { font-family: 'DM Serif Display', serif; font-size: 2rem; line-height: 1.1; margin-bottom: 5px; }
+.page-subtitle { color: var(--muted); font-size: 0.86rem; }
+
+/* ── CARDS ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+.card-header { padding: 13px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--warm); }
+.card-header-title { font-weight: 600; font-size: 0.9rem; }
+.card-header-meta { font-size: 0.76rem; color: var(--muted); }
+.card-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+/* ── FIELDS ── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 0.77rem; font-weight: 600; }
+.field .hint { font-size: 0.7rem; color: var(--muted); margin-top: -2px; }
+.field input, .field select, .field textarea { padding: 8px 11px; border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; color: var(--ink); background: #fff; outline: none; transition: border-color 0.15s; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,65,10,0.07); }
+.field textarea { resize: vertical; min-height: 80px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+
+/* ── BUTTONS ── */
+.btn { padding: 8px 18px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-light); }
+.btn-secondary { background: none; border: 1px solid var(--border); color: var(--muted); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-ghost { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.btn-ghost:hover { background: var(--warm); color: var(--ink); }
+.btn-sm { padding: 5px 11px; font-size: 0.77rem; }
+.btn-danger { background: none; border: 1px solid #fca5a5; color: #dc2626; }
+.btn-danger:hover { background: #fef2f2; }
+
+/* ── SURVEY TYPE SELECTOR (admin) ── */
+.survey-type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+.survey-type-card { background: var(--surface); border: 2px solid var(--border); border-radius: 10px; padding: 20px; cursor: pointer; transition: all 0.15s; text-align: left; font-family: 'DM Sans', sans-serif; }
+.survey-type-card:hover { border-color: var(--accent); }
+.survey-type-card.selected { border-color: var(--accent); background: #fff8f5; }
+.survey-type-card .stc-icon { font-size: 1.6rem; margin-bottom: 8px; }
+.survey-type-card .stc-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 3px; }
+.survey-type-card .stc-desc { font-size: 0.76rem; color: var(--muted); }
+
+/* ── QUESTION EDITOR ── */
+.qe-toolbar { display: flex; align-items: center; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+.qe-list { display: flex; flex-direction: column; gap: 7px; }
+.qe-item { background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px; transition: background 0.1s; }
+.qe-item.section-item { background: var(--warm); border-style: dashed; }
+.qe-handle { color: var(--muted); cursor: grab; padding-top: 2px; font-size: 1rem; user-select: none; }
+.qe-content { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.qe-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+.qe-input { flex: 1; min-width: 120px; padding: 5px 9px; border: 1px solid var(--border); border-radius: 5px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; background: #fff; outline: none; }
+.qe-input:focus { border-color: var(--accent); }
+.qe-type-badge { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; white-space: nowrap; }
+.badge-rating { background: #e8f0fb; color: #1a3a5c; }
+.badge-textarea { background: #f0ebe8; color: #5c2a1a; }
+.badge-select { background: #e8f5ee; color: #1a5c3a; }
+.badge-section { background: #f5f0e0; color: #5c4a1a; }
+.badge-scale { background: #f0e8fb; color: #3a1a5c; }
+.badge-yesno { background: #e8fbe8; color: #1a5c1a; }
+.qe-del { color: #cc4444; background: none; border: none; cursor: pointer; font-size: 0.95rem; padding: 2px 4px; border-radius: 3px; flex-shrink: 0; }
+.qe-del:hover { background: #fef2f2; }
+
+/* ── SURVEY FORM (respondent view) ── */
+.survey-header-banner { background: var(--ink); color: var(--paper); border-radius: 10px; padding: 28px 32px; margin-bottom: 24px; }
+.survey-banner-eyebrow { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; margin-bottom: 6px; }
+.survey-banner-title { font-family: 'DM Serif Display', serif; font-size: 1.7rem; margin-bottom: 6px; }
+.survey-banner-sub { font-size: 0.83rem; opacity: 0.65; }
+
+.survey-q { margin-bottom: 22px; }
+.survey-q-label { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+.survey-q-hint { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
+.survey-q textarea { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; resize: vertical; min-height: 90px; outline: none; background: #fff; }
+.survey-q textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,65,10,0.07); }
+.survey-q select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; background: #fff; }
+.survey-q select:focus { border-color: var(--accent); }
+.survey-q-section { font-family: 'DM Serif Display', serif; font-size: 1.15rem; padding-top: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 6px; color: var(--ink); }
+
+.scale-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: flex-start; }
+.scale-opt { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+.scale-opt input[type="radio"] { display: none; }
+.scale-pip { width: 38px; height: 38px; border-radius: 6px; border: 1px solid var(--border); background: #fff; display: grid; place-items: center; font-size: 0.84rem; font-weight: 600; color: var(--muted); transition: all 0.1s; }
+.scale-opt input[type="radio"]:checked + .scale-pip { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.scale-opt:hover .scale-pip { border-color: var(--accent); color: var(--accent); }
+.scale-ends { display: flex; justify-content: space-between; font-size: 0.67rem; color: var(--muted); margin-top: 3px; }
+
+.yesno-row { display: flex; gap: 10px; }
+.yesno-opt { display: flex; }
+.yesno-opt input[type="radio"] { display: none; }
+.yesno-label { padding: 8px 22px; border: 1px solid var(--border); border-radius: 6px; font-weight: 600; font-size: 0.84rem; cursor: pointer; background: #fff; transition: all 0.15s; color: var(--muted); }
+.yesno-opt input[type="radio"]:checked + .yesno-label { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.yesno-opt:hover .yesno-label { border-color: var(--accent); color: var(--accent); }
+
+.survey-submit-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; background: var(--warm); border: 1px solid var(--border); border-radius: 10px; margin-top: 28px; }
+.privacy-note { display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: var(--muted); }
+
+.calendly-block { background: linear-gradient(135deg, #1a1410 0%, #2a1f18 100%); border-radius: 10px; padding: 24px 28px; margin-top: 28px; color: var(--paper); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+.calendly-text .clt { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
+.calendly-text .cls { font-size: 0.8rem; opacity: 0.6; }
+.calendly-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.87rem; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
+.calendly-btn:hover { background: var(--accent-light); }
+
+.thank-you { text-align: center; padding: 60px 30px; }
+.thank-you .ty-icon { font-size: 3rem; margin-bottom: 16px; }
+.thank-you .ty-title { font-family: 'DM Serif Display', serif; font-size: 2rem; margin-bottom: 8px; }
+.thank-you .ty-sub { color: var(--muted); font-size: 0.9rem; }
+
+/* ── ADMIN OVERVIEW ── */
+.admin-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.admin-tab { padding: 8px 18px; border: none; background: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+.admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.admin-tab:hover:not(.active) { color: var(--ink); }
+.admin-tab-panel { display: none; }
+.admin-tab-panel.active { display: block; }
+
+.survey-config-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.survey-config-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+
+/* link share box */
+.share-link-box { display: flex; align-items: center; gap: 8px; background: var(--warm); border: 1px solid var(--border); border-radius: 7px; padding: 9px 13px; }
+.share-link-url { flex: 1; font-size: 0.8rem; color: var(--muted); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copy-btn { padding: 4px 12px; background: var(--ink); color: var(--paper); border: none; border-radius: 5px; font-size: 0.76rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+/* responses */
+.response-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s; }
+.response-card:hover { border-color: var(--accent); }
+.response-card-top { display: flex; align-items: center; gap: 12px; }
+.rc-type { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+.rc-staff { background: #dbeafe; color: #1e40af; }
+.rc-photog { background: #fce7f3; color: #9d174d; }
+.rc-name { font-weight: 600; font-size: 0.9rem; flex: 1; }
+.rc-date { font-size: 0.75rem; color: var(--muted); }
+.response-preview { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: none; }
+.response-preview.open { display: block; }
+.rp-row { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+.rp-row:last-child { border-bottom: none; }
+.rp-q { color: var(--muted); font-weight: 500; flex: 0 0 180px; }
+.rp-a { flex: 1; font-weight: 500; }
+
+/* toast */
+.toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: var(--paper); padding: 10px 17px; border-radius: 8px; font-size: 0.82rem; font-weight: 500; transform: translateY(65px); opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 1000; display: flex; align-items: center; gap: 7px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(26,20,16,0.5); backdrop-filter: blur(2px); z-index: 200; display: none; place-items: center; }
+.modal-overlay.show { display: grid; }
+.modal { background: var(--surface); border-radius: 10px; width: 90%; max-width: 640px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+.modal-close { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: none; cursor: pointer; display: grid; place-items: center; color: var(--muted); font-size: 0.95rem; }
+.modal-close:hover { background: var(--warm); color: var(--ink); }
+.modal-body { padding: 18px 20px; }
+
+/* pw change */
+.pw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* status pill */
+.status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 0.71rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+.sp-open { background: #dcfce7; color: #166534; }
+.sp-closed { background: #fee2e2; color: #991b1b; }
+
+/* empty state */
+.empty { text-align: center; padding: 48px 28px; color: var(--muted); }
+.empty svg { width: 40px; height: 40px; margin-bottom: 10px; opacity: 0.22; }
+.empty p { font-size: 0.86rem; }
+
+@media (max-width: 600px) {
+  .survey-type-cards { grid-template-columns: 1fr; }
+  .pw-grid { grid-template-columns: 1fr; }
+  .row2 { grid-template-columns: 1fr; }
+  .rp-q { flex: 0 0 120px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <div class="lock-title">Annual Review Survey</div>
+    <div class="lock-sub">Airstudio — enter your access code to continue</div>
+    <div class="lock-role-tabs" id="lock-tabs">
+      <button class="lock-role-tab active" onclick="setLockRole('staff')" id="tab-staff">Production Staff</button>
+      <button class="lock-role-tab" onclick="setLockRole('photog')" id="tab-photog">Photographer</button>
+      <button class="lock-role-tab" onclick="setLockRole('admin')" id="tab-admin">Admin</button>
+    </div>
+    <div class="lock-field">
+      <label id="lock-label">Staff Access Code</label>
+      <input type="password" id="lock-pw" placeholder="Enter code" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="lock-error" id="lock-error"></div>
+    <button class="lock-btn" onclick="doLogin()">Continue →</button>
+    <div class="lock-hint" id="lock-hint">Contact your manager if you need your access code.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M6.3 6.3A8 8 0 1 0 17.7 17.7"/><path d="M2 12h2m16 0h2M12 2v2m0 16v2"/>
+      </svg>
+    </div>
+    <span class="header-title">Annual Review Survey</span>
+  </div>
+  <nav class="header-nav" id="header-nav">
+    <span id="session-badge-wrap"></span>
+    <button class="nav-btn" onclick="doLogout()">Sign Out</button>
+  </nav>
+</header>
+
+<div class="app">
+
+  <!-- STAFF SURVEY VIEW -->
+  <div class="view" id="view-staff-survey"></div>
+
+  <!-- PHOTOG SURVEY VIEW -->
+  <div class="view" id="view-photog-survey"></div>
+
+  <!-- ADMIN VIEW -->
+  <div class="view" id="view-admin">
+    <div class="page-header">
+      <div class="eyebrow ey-admin">🔐 Admin</div>
+      <div class="page-title">Survey Dashboard</div>
+      <div class="page-subtitle">Configure surveys, manage access, and review responses.</div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="adminTab('configure')">Configure</button>
+      <button class="admin-tab" onclick="adminTab('share')">Share &amp; Access</button>
+      <button class="admin-tab" onclick="adminTab('responses')">Responses</button>
+      <button class="admin-tab" onclick="adminTab('settings')">Settings</button>
+    </div>
+    <div class="admin-tab-panel active" id="atab-configure">
+      <!-- Configure tab content built by JS -->
+    </div>
+    <div class="admin-tab-panel" id="atab-share">
+      <!-- Share tab content built by JS -->
+    </div>
+    <div class="admin-tab-panel" id="atab-responses">
+      <!-- Responses tab content built by JS -->
+    </div>
+    <div class="admin-tab-panel" id="atab-settings">
+      <!-- Settings tab content built by JS -->
+    </div>
+  </div>
+
+  <!-- THANK YOU VIEW -->
+  <div class="view" id="view-thanks">
+    <div class="thank-you">
+      <div class="ty-icon">✅</div>
+      <div class="ty-title">Thank you!</div>
+      <div class="ty-sub" id="thanks-sub">Your responses have been submitted. Your manager will be in touch.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title"></span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span style="color:#4ade80">✓</span><span id="toast-msg"></span></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DEFAULT QUESTIONS
+// ═══════════════════════════════════════════════════════
+const DEFAULT_QUESTIONS = {
+  staff: [
+    {t:'section', label:'Looking Back'},
+    {t:'textarea', name:'strengths', label:'What do you feel were your biggest strengths this year?', hint:'Think about specific moments, skills, or contributions you\'re proud of.'},
+    {t:'textarea', name:'challenges', label:'What was your biggest challenge this year, and how did you handle it?'},
+    {t:'scale', name:'overall_year', label:'Overall, how would you rate this year for yourself personally?', min:'Difficult', max:'Excellent'},
+    {t:'section', label:'Team & Management'},
+    {t:'scale', name:'mgmt_support', label:'How well did management support you this year?', min:'Not well', max:'Very well'},
+    {t:'scale', name:'communication', label:'How would you rate communication from leadership?', min:'Poor', max:'Excellent'},
+    {t:'textarea', name:'mgmt_feedback', label:'What could management do better or differently next year?', hint:'Be honest — this is private and helps us improve.'},
+    {t:'textarea', name:'team_feedback', label:'How did the team function together? Any dynamics worth noting?'},
+    {t:'section', label:'Growth & Goals'},
+    {t:'textarea', name:'goals', label:'What are your top 2–3 goals for next year?'},
+    {t:'textarea', name:'skills', label:'What skills or areas would you most like to develop?'},
+    {t:'select', name:'advancement', label:'Are you interested in taking on more responsibility?', options:'Yes, definitely,Open to it,Not right now,No'},
+    {t:'textarea', name:'resources', label:'What resources, tools, or support would help you succeed?'},
+    {t:'section', label:'Your Voice'},
+    {t:'textarea', name:'proudest', label:'What are you most proud of from this year?'},
+    {t:'textarea', name:'company_improve', label:'What\'s one thing the studio could do to improve overall?'},
+    {t:'textarea', name:'anything_else', label:'Anything else you\'d like to share before your review?', hint:'Open floor — no wrong answers here.'},
+  ],
+  photog: [
+    {t:'section', label:'Your Work This Year'},
+    {t:'textarea', name:'strengths', label:'What do you consider your greatest strengths as a photographer this year?', hint:'Think technically, creatively, and in how you work with subjects.'},
+    {t:'textarea', name:'fav_jobs', label:'Which type of jobs do you enjoy most, and why?'},
+    {t:'scale', name:'overall_year', label:'How would you rate your overall performance this year?', min:'Needs work', max:'Outstanding'},
+    {t:'textarea', name:'proud_of', label:'What\'s a specific moment or job you\'re most proud of?'},
+    {t:'section', label:'Craft & Skills'},
+    {t:'scale', name:'technical_confidence', label:'How confident are you in your technical skills (exposure, lighting, gear)?', min:'Not confident', max:'Very confident'},
+    {t:'scale', name:'posing_confidence', label:'How confident are you directing and posing subjects?', min:'Not confident', max:'Very confident'},
+    {t:'textarea', name:'want_to_improve', label:'What area of your photography do you most want to improve?'},
+    {t:'textarea', name:'gear_feedback', label:'Any feedback on equipment? Things that help or things you need?'},
+    {t:'section', label:'The Job Experience'},
+    {t:'scale', name:'job_satisfaction', label:'How satisfied are you with the types of jobs you\'ve been assigned?', min:'Unsatisfied', max:'Very satisfied'},
+    {t:'scale', name:'support_onsite', label:'How well supported do you feel on-site during jobs?', min:'Not at all', max:'Fully supported'},
+    {t:'textarea', name:'job_feedback', label:'What would make jobs run smoother from your perspective?'},
+    {t:'section', label:'Management & Team'},
+    {t:'scale', name:'mgmt_feedback_scale', label:'How would you rate your experience with management this year?', min:'Poor', max:'Excellent'},
+    {t:'textarea', name:'mgmt_feedback', label:'What could management do better to support photographers?', hint:'Honest, private feedback is welcomed.'},
+    {t:'textarea', name:'team_dynamics', label:'How was the team dynamic this year? Any feedback on collaboration?'},
+    {t:'section', label:'Looking Ahead'},
+    {t:'textarea', name:'goals', label:'What are your goals as a photographer for next year?'},
+    {t:'select', name:'more_roles', label:'Are you interested in shooting different types of jobs?', options:'Yes, I want to expand,Happy with current roles,Would like fewer types,Not sure'},
+    {t:'textarea', name:'training', label:'What training or development would you find most valuable?'},
+    {t:'section', label:'Your Voice'},
+    {t:'textarea', name:'company_improve', label:'What\'s one thing the studio could do to improve overall?'},
+    {t:'textarea', name:'anything_else', label:'Anything else you\'d like your manager to know before your review?', hint:'Open floor — all feedback welcomed.'},
+  ]
+};
+
+// ═══════════════════════════════════════════════════════
+// API — Netlify functions bridge
+// ═══════════════════════════════════════════════════════
+const API_BASE = '/.netlify/functions';
+let _sessionAdminPw = null;
+
+async function apiSaveResponse(rec) {
+  try {
+    const res = await fetch(`${API_BASE}/save-review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rec),
+    });
+    return res.ok;
+  } catch(e) { console.warn('apiSaveResponse failed', e); return false; }
+}
+
+async function apiFetchResponses() {
+  if(!_sessionAdminPw) return null;
+  try {
+    const res = await fetch(`${API_BASE}/get-reviews`, {
+      headers: { 'x-admin-password': _sessionAdminPw },
+    });
+    if(res.status === 401) { showToast('Admin password rejected by server'); return null; }
+    if(!res.ok) return null;
+    return await res.json();
+  } catch(e) { console.warn('apiFetchResponses failed', e); return null; }
+}
+
+async function apiDeleteResponse(id) {
+  if(!_sessionAdminPw) return false;
+  try {
+    const res = await fetch(`${API_BASE}/delete-review`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': _sessionAdminPw },
+      body: JSON.stringify({ id }),
+    });
+    return res.ok;
+  } catch(e) { return false; }
+}
+
+// ═══════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════
+function getQs(type) {
+  try { const s = localStorage.getItem(`survey_qs_${type}`); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_QUESTIONS[type])); } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_QUESTIONS[type])); }
+}
+function saveQs(type, qs) { localStorage.setItem(`survey_qs_${type}`, JSON.stringify(qs)); }
+function getResponses() { try { return JSON.parse(localStorage.getItem('survey_responses')||'[]'); } catch(e) { return []; } }
+function saveResponses(r) { localStorage.setItem('survey_responses', JSON.stringify(r)); }
+function getPw(role) {
+  const defaults = {admin:'admin123', staff:'studio2025', photog:'photo2025'};
+  return localStorage.getItem('survey_pw_'+role) || defaults[role];
+}
+function setPw(role, pw) { localStorage.setItem('survey_pw_'+role, pw); }
+function getConfig() { try { return JSON.parse(localStorage.getItem('survey_config')||'{}'); } catch(e) { return {}; } }
+function saveConfig(c) { localStorage.setItem('survey_config', JSON.stringify(c)); }
+function getSurveyStatus() { try { return JSON.parse(localStorage.getItem('survey_status')||'{"staff":true,"photog":true}'); } catch(e) { return {staff:true,photog:true}; } }
+function saveSurveyStatus(s) { localStorage.setItem('survey_status', JSON.stringify(s)); }
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let sessionRole = null;
+let lockRole = 'staff';
+let adminActiveTab = 'configure';
+let cfgEditType = 'staff';
+let dragIdx = null;
+let openResponseId = null;
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+function setLockRole(role) {
+  lockRole = role;
+  ['staff','photog','admin'].forEach(r => document.getElementById('tab-'+r).classList.toggle('active', r===role));
+  const labels = {staff:'Staff Access Code', photog:'Photographer Access Code', admin:'Admin Password'};
+  document.getElementById('lock-label').textContent = labels[role];
+  document.getElementById('lock-error').textContent = '';
+  document.getElementById('lock-pw').value = '';
+  document.getElementById('lock-pw').focus();
+}
+
+function doLogin() {
+  const pw = document.getElementById('lock-pw').value.trim();
+  if(!pw) { document.getElementById('lock-error').textContent = 'Please enter your access code.'; return; }
+  if(pw === getPw(lockRole)) {
+    sessionRole = lockRole;
+    if(lockRole === 'admin') _sessionAdminPw = pw;
+    document.getElementById('lock-screen').style.display = 'none';
+    const badgeLabels = {staff:'👤 Staff', photog:'📷 Photographer', admin:'🔐 Admin'};
+    const badgeClasses = {staff:'badge-admin', photog:'badge-admin', admin:'badge-admin'};
+    document.getElementById('session-badge-wrap').innerHTML = `<span class="session-badge badge-admin" style="background:${sessionRole==='admin'?'#fef3c7':sessionRole==='staff'?'#dbeafe':'#fce7f3'};color:${sessionRole==='admin'?'#92400e':sessionRole==='staff'?'#1e40af':'#9d174d'};border:1px solid ${sessionRole==='admin'?'#fde68a':sessionRole==='staff'?'#bfdbfe':'#fbcfe8'}">${badgeLabels[sessionRole]}</span>`;
+    if(sessionRole === 'admin') showAdminView();
+    else renderSurveyView(sessionRole);
+  } else {
+    document.getElementById('lock-error').textContent = 'Incorrect code. Please try again.';
+    document.getElementById('lock-pw').value = '';
+    document.getElementById('lock-pw').focus();
+  }
+}
+
+function doLogout() {
+  sessionRole = null; _sessionAdminPw = null; lockRole = 'staff';
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('lock-screen').style.display = 'flex';
+  document.getElementById('lock-pw').value = '';
+  document.getElementById('lock-error').textContent = '';
+  setLockRole('staff');
+}
+
+// ═══════════════════════════════════════════════════════
+// SURVEY VIEW (respondents)
+// ═══════════════════════════════════════════════════════
+function renderSurveyView(type) {
+  const status = getSurveyStatus();
+  const config = getConfig();
+  const el = document.getElementById('view-'+type+'-survey');
+  el.innerHTML = '';
+
+  if(!status[type]) {
+    el.innerHTML = `<div class="thank-you"><div class="ty-icon">🔒</div><div class="ty-title">Survey Closed</div><div class="ty-sub">This survey is not currently accepting responses. Contact your manager for more information.</div></div>`;
+    showView(type+'-survey'); return;
+  }
+
+  const qs = getQs(type);
+  const title = type==='staff' ? 'Production Staff Annual Review' : 'Photographer Annual Review';
+  const subtitle = type==='staff' ? 'Your responses are private and will only be seen by management.' : 'Share your honest thoughts — responses are private and help shape your in-person review.';
+
+  let html = `<div class="survey-header-banner">
+    <div class="survey-banner-eyebrow">${new Date().getFullYear()} Annual Review</div>
+    <div class="survey-banner-title">${title}</div>
+    <div class="survey-banner-sub">${subtitle}</div>
+  </div>
+  <form id="survey-form-${type}" onsubmit="submitSurvey(event,'${type}')">
+  <div class="card">
+    <div class="card-header"><span class="card-header-title">Your Info</span><span class="card-header-meta">Required</span></div>
+    <div class="card-body">
+      <div class="row2">
+        <div class="field"><label>Your Name</label><input type="text" name="respondent_name" required placeholder="First Last"></div>
+        <div class="field"><label>Role / Position</label><input type="text" name="respondent_role" placeholder="${type==='staff'?'e.g. Job Manager, QC':'e.g. Senior Photographer'}"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-header-title">Survey Questions</span><span class="card-header-meta">All answers are private</span></div>
+    <div class="card-body" style="gap:20px">`;
+
+  let qIdx = 0;
+  for(const q of qs) {
+    if(q.t === 'section') {
+      html += `<div class="survey-q-section">${h(q.label)}</div>`;
+      continue;
+    }
+    const name = q.name || 'q_'+qIdx;
+    html += `<div class="survey-q">
+      <div class="survey-q-label">${h(q.label)}</div>
+      ${q.hint ? `<div class="survey-q-hint">${h(q.hint)}</div>` : ''}`;
+    if(q.t==='textarea') {
+      html += `<textarea name="${name}" rows="4" placeholder="Your answer…"></textarea>`;
+    } else if(q.t==='select') {
+      const opts = (q.options||'').split(',').filter(Boolean);
+      html += `<select name="${name}"><option value="">Select…</option>${opts.map(o=>`<option value="${h(o)}">${h(o)}</option>`).join('')}</select>`;
+    } else if(q.t==='scale') {
+      html += `<div class="scale-row">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<label class="scale-opt"><input type="radio" name="${name}" value="${n}"><div class="scale-pip">${n}</div></label>`).join('')}</div>
+      <div class="scale-ends"><span>${h(q.min||'Low')}</span><span>${h(q.max||'High')}</span></div>`;
+    } else if(q.t==='yesno') {
+      html += `<div class="yesno-row"><label class="yesno-opt"><input type="radio" name="${name}" value="Yes"><span class="yesno-label">Yes</span></label><label class="yesno-opt"><input type="radio" name="${name}" value="No"><span class="yesno-label">No</span></label></div>`;
+    }
+    html += `</div>`;
+    qIdx++;
+  }
+
+  html += `</div></div>
+  <div class="survey-submit-bar">
+    <div class="privacy-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Responses are private — only visible to management</div>
+    <button type="submit" class="btn btn-primary">Submit Survey →</button>
+  </div></form>`;
+
+  // Calendly block
+  const calendlyUrl = config.calendly_url || '';
+  const calendlyLabel = config.calendly_label || 'Schedule Your Review Meeting';
+  const calendlyDesc = config.calendly_desc || 'Once you\'ve submitted your survey, use the link below to schedule your 1-on-1 review.';
+  if(calendlyUrl) {
+    html += `<div class="calendly-block">
+      <div class="calendly-text"><div class="clt">📅 ${calendlyLabel}</div><div class="cls">${h(calendlyDesc)}</div></div>
+      <a href="${h(calendlyUrl)}" target="_blank" class="calendly-btn">Book Your Time →</a>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+  showView(type+'-survey');
+}
+
+function submitSurvey(e, type) {
+  e.preventDefault();
+  const fd = new FormData(e.target), data = {};
+  fd.forEach((v,k) => { if(v) data[k] = v; });
+  if(!data.respondent_name) { showToast('Please enter your name'); return; }
+  const rec = { id: Date.now(), type, submitted_at: new Date().toISOString(), ...data };
+  const all = getResponses(); all.unshift(rec); saveResponses(all);
+  // Also push to server
+  apiSaveResponse(rec).then(ok => {
+    if(!ok) showToast('\u26a0\ufe0f Saved locally \u2014 server sync failed');
+  });
+  showView('thanks');
+  const config = getConfig();
+  const calendlyUrl = config.calendly_url || '';
+  const thanks = document.getElementById('thanks-sub');
+  if(calendlyUrl) {
+    thanks.innerHTML = `Your responses have been submitted — thank you. Don't forget to <a href="${h(calendlyUrl)}" target="_blank" style="color:var(--accent);font-weight:600">book your review meeting</a> if you haven't already.`;
+  } else {
+    thanks.textContent = 'Your responses have been submitted. Your manager will be in touch to schedule your in-person review.';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN VIEW
+// ═══════════════════════════════════════════════════════
+function showAdminView() {
+  showView('admin');
+  renderAdminTab('configure');
+}
+
+function adminTab(tab) {
+  adminActiveTab = tab;
+  document.querySelectorAll('.admin-tab').forEach((b,i) => {
+    const tabs = ['configure','share','responses','settings'];
+    b.classList.toggle('active', tabs[i]===tab);
+  });
+  document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('atab-'+tab).classList.add('active');
+  renderAdminTab(tab);
+}
+
+function renderAdminTab(tab) {
+  if(tab==='configure') renderConfigureTab();
+  if(tab==='share') renderShareTab();
+  if(tab==='responses') renderResponsesTab();
+  if(tab==='settings') renderSettingsTab();
+}
+
+// ── CONFIGURE TAB ──
+function renderConfigureTab() {
+  const el = document.getElementById('atab-configure');
+  const status = getSurveyStatus();
+  const config = getConfig();
+  el.innerHTML = `
+  <div class="survey-config-section">
+    <div class="survey-config-title">📋 Survey Status</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:700;font-size:0.87rem;margin-bottom:2px">Production Staff Survey</div>
+          <span class="status-pill ${status.staff?'sp-open':'sp-closed'}">${status.staff?'🟢 Open':'🔴 Closed'}</span>
+        </div>
+        <button class="btn btn-sm ${status.staff?'btn-danger':'btn-primary'}" onclick="toggleSurveyStatus('staff')">${status.staff?'Close':'Open'}</button>
+      </div>
+      <div style="flex:1;min-width:220px;background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:700;font-size:0.87rem;margin-bottom:2px">Photographer Survey</div>
+          <span class="status-pill ${status.photog?'sp-open':'sp-closed'}">${status.photog?'🟢 Open':'🔴 Closed'}</span>
+        </div>
+        <button class="btn btn-sm ${status.photog?'btn-danger':'btn-primary'}" onclick="toggleSurveyStatus('photog')">${status.photog?'Close':'Open'}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="survey-config-section">
+    <div class="survey-config-title">📅 Calendly / Scheduling Link</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px">This link appears at the bottom of each survey and on the thank-you screen, so respondents can book their review meeting.</p>
+    <div class="row2" style="margin-bottom:12px">
+      <div class="field"><label>Calendly URL</label><input type="url" id="calendly-url" placeholder="https://calendly.com/your-link" value="${h(config.calendly_url||'')}"></div>
+      <div class="field"><label>Button Label</label><input type="text" id="calendly-label" placeholder="Schedule Your Review Meeting" value="${h(config.calendly_label||'')}"></div>
+    </div>
+    <div class="field" style="margin-bottom:12px"><label>Description text (shown above button)</label><input type="text" id="calendly-desc" placeholder="Once submitted, use this link to book your 1-on-1 review." value="${h(config.calendly_desc||'')}"></div>
+    <button class="btn btn-primary btn-sm" onclick="saveCalendly()">Save Scheduling Link</button>
+  </div>
+
+  <div class="survey-config-section">
+    <div class="survey-config-title">✏️ Edit Questions</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px">Customize the questions for each survey. Changes save automatically.</p>
+    <div style="display:flex;gap:6px;margin-bottom:16px">
+      <button class="btn btn-sm ${cfgEditType==='staff'?'btn-primary':'btn-secondary'}" onclick="switchQEditor('staff')">Production Staff</button>
+      <button class="btn btn-sm ${cfgEditType==='photog'?'btn-primary':'btn-secondary'}" onclick="switchQEditor('photog')">Photographers</button>
+    </div>
+    <div id="q-editor-container"></div>
+  </div>`;
+  renderQEditor();
+}
+
+function toggleSurveyStatus(type) {
+  const s = getSurveyStatus(); s[type] = !s[type]; saveSurveyStatus(s);
+  renderConfigureTab(); showToast(`${type==='staff'?'Staff':'Photographer'} survey ${s[type]?'opened':'closed'}`);
+}
+
+function saveCalendly() {
+  const c = getConfig();
+  c.calendly_url = document.getElementById('calendly-url').value.trim();
+  c.calendly_label = document.getElementById('calendly-label').value.trim();
+  c.calendly_desc = document.getElementById('calendly-desc').value.trim();
+  saveConfig(c); showToast('Scheduling link saved');
+}
+
+function switchQEditor(type) { cfgEditType = type; renderConfigureTab(); }
+
+// ── QUESTION EDITOR ──
+function renderQEditor() {
+  const qs = getQs(cfgEditType);
+  const badgeMap = {section:'badge-section',rating:'badge-rating',textarea:'badge-textarea',select:'badge-select',scale:'badge-scale',yesno:'badge-yesno'};
+  let html = `<div class="qe-toolbar">
+    <button class="btn btn-primary btn-sm" onclick="addSurveyQ('textarea')">+ Open Text</button>
+    <button class="btn btn-secondary btn-sm" onclick="addSurveyQ('scale')">+ 1–10 Scale</button>
+    <button class="btn btn-secondary btn-sm" onclick="addSurveyQ('select')">+ Dropdown</button>
+    <button class="btn btn-secondary btn-sm" onclick="addSurveyQ('yesno')">+ Yes/No</button>
+    <button class="btn btn-secondary btn-sm" onclick="addSurveyQ('section')">+ Section Header</button>
+    <span style="flex:1"></span>
+    <button class="btn btn-ghost btn-sm" onclick="resetSurveyQs()">Reset Defaults</button>
+  </div><div class="qe-list" id="sq-list">`;
+
+  qs.forEach((q,i) => {
+    const isS = q.t==='section';
+    html += `<div class="qe-item${isS?' section-item':''}" data-idx="${i}" draggable="true" ondragstart="sqDStart(event,${i})" ondragover="sqDOver(event)" ondrop="sqDDrop(event,${i})">
+      <span class="qe-handle">⠿</span>
+      <div class="qe-content">
+        <div class="qe-row">
+          <span class="qe-type-badge ${badgeMap[q.t]||''}">${q.t}</span>
+          <input class="qe-input" placeholder="${isS?'Section title…':'Question text…'}" value="${h(q.label||'')}" oninput="sqUpdate(${i},'label',this.value)">
+          ${!isS?`<input class="qe-input" style="flex:0.8;font-size:0.76rem;color:var(--muted)" placeholder="Hint / sub-text (optional)" value="${h(q.hint||'')}" oninput="sqUpdate(${i},'hint',this.value)">`:''}
+          <button class="qe-del" onclick="removeSurveyQ(${i})" title="Remove">✕</button>
+        </div>
+        ${q.t==='select'?`<div class="qe-row"><input class="qe-input" style="font-size:0.77rem" placeholder="Comma-separated options: Option A,Option B,Option C" value="${h(q.options||'')}" oninput="sqUpdate(${i},'options',this.value)"></div>`:''}
+        ${q.t==='scale'?`<div class="qe-row">
+          <input class="qe-input" style="flex:0.5;font-size:0.76rem" placeholder="Low label (e.g. Poor)" value="${h(q.min||'')}" oninput="sqUpdate(${i},'min',this.value)">
+          <input class="qe-input" style="flex:0.5;font-size:0.76rem" placeholder="High label (e.g. Excellent)" value="${h(q.max||'')}" oninput="sqUpdate(${i},'max',this.value)">
+        </div>`:''}
+      </div>
+    </div>`;
+  });
+
+  html += `</div><p style="font-size:0.72rem;color:var(--muted);margin-top:10px">Drag to reorder · Changes save automatically.</p>`;
+  document.getElementById('q-editor-container').innerHTML = html;
+}
+
+function sqUpdate(i, field, val) { const qs=getQs(cfgEditType); qs[i][field]=val; saveQs(cfgEditType,qs); }
+function addSurveyQ(type) {
+  const qs = getQs(cfgEditType);
+  const q = {t:type, label:'', hint:''};
+  if(type==='section'){q.label='New Section';delete q.hint;}
+  if(type==='select') q.options='Option A,Option B,Option C';
+  if(type==='scale'){q.min='Low';q.max='High';}
+  if(type!=='section') q.name=type+'_'+Date.now();
+  qs.push(q); saveQs(cfgEditType,qs); renderQEditor();
+  showToast('Question added');
+}
+function removeSurveyQ(i) { const qs=getQs(cfgEditType); qs.splice(i,1); saveQs(cfgEditType,qs); renderQEditor(); }
+function resetSurveyQs() {
+  if(confirm('Reset to default questions? Custom questions will be lost.')) {
+    localStorage.removeItem('survey_qs_'+cfgEditType); renderQEditor(); showToast('Reset to defaults');
+  }
+}
+function sqDStart(e,i){dragIdx=i;e.dataTransfer.effectAllowed='move';}
+function sqDOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';}
+function sqDDrop(e,i){
+  e.preventDefault();if(dragIdx===null||dragIdx===i)return;
+  const qs=getQs(cfgEditType);const[m]=qs.splice(dragIdx,1);qs.splice(i,0,m);
+  saveQs(cfgEditType,qs);dragIdx=null;renderQEditor();
+}
+
+// ── SHARE TAB ──
+function renderShareTab() {
+  const base = window.location.href.split('?')[0];
+  const el = document.getElementById('atab-share');
+  el.innerHTML = `
+  <div class="survey-config-section">
+    <div class="survey-config-title">🔗 Share Links</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:18px">Share this page URL — respondents will select their role on the login screen. Or give them their specific access codes below.</p>
+    <div class="field" style="margin-bottom:18px">
+      <label>Survey Page URL</label>
+      <div class="share-link-box">
+        <span class="share-link-url" id="main-url">${base}</span>
+        <button class="copy-btn" onclick="copyLink('main-url')">Copy</button>
+      </div>
+    </div>
+    <p style="font-size:0.8rem;font-weight:600;margin-bottom:12px">Access Codes</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--warm);border:1px solid var(--border);border-radius:8px">
+        <span style="font-size:0.82rem;font-weight:600;flex:0 0 140px">Production Staff</span>
+        <code style="flex:1;font-size:0.87rem;background:#fff;padding:4px 10px;border-radius:5px;border:1px solid var(--border)">${getPw('staff')}</code>
+        <button class="btn btn-secondary btn-sm" onclick="showChangePw('staff')">Change</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--warm);border:1px solid var(--border);border-radius:8px">
+        <span style="font-size:0.82rem;font-weight:600;flex:0 0 140px">Photographers</span>
+        <code style="flex:1;font-size:0.87rem;background:#fff;padding:4px 10px;border-radius:5px;border:1px solid var(--border)">${getPw('photog')}</code>
+        <button class="btn btn-secondary btn-sm" onclick="showChangePw('photog')">Change</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--warm);border:1px solid var(--border);border-radius:8px">
+        <span style="font-size:0.82rem;font-weight:600;flex:0 0 140px">Admin</span>
+        <code style="flex:1;font-size:0.87rem;background:#fff;padding:4px 10px;border-radius:5px;border:1px solid var(--border)">${getPw('admin')}</code>
+        <button class="btn btn-secondary btn-sm" onclick="showChangePw('admin')">Change</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function copyLink(elId) {
+  const url = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(url).then(()=>showToast('Link copied to clipboard'));
+}
+
+function showChangePw(role) {
+  const labels = {staff:'Production Staff', photog:'Photographers', admin:'Admin'};
+  document.getElementById('modal-title').textContent = `Change ${labels[role]} Password`;
+  document.getElementById('modal-body').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="field"><label>New Access Code / Password</label><input type="password" id="pw-new-val" placeholder="At least 4 characters" autocomplete="new-password"></div>
+      <div class="field"><label>Confirm</label><input type="password" id="pw-new-val2" placeholder="Repeat" autocomplete="new-password"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="doChangePw('${role}')">Update</button>
+      </div>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function doChangePw(role) {
+  const v1 = document.getElementById('pw-new-val').value.trim();
+  const v2 = document.getElementById('pw-new-val2').value.trim();
+  if(!v1||v1.length<4){showToast('Must be at least 4 characters');return;}
+  if(v1!==v2){showToast('Passwords do not match');return;}
+  setPw(role,v1); closeModal(); renderShareTab(); showToast('Password updated');
+}
+
+// ── RESPONSES TAB ──
+function renderResponsesTab() {
+  if(sessionRole === 'admin') {
+    const el = document.getElementById('atab-responses');
+    el.innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted);font-size:0.85rem">⏳ Loading responses from server…</div>`;
+    apiFetchResponses().then(serverData => {
+      if(serverData && serverData.length > 0) saveResponses(serverData);
+      _renderResponsesList(serverData || getResponses());
+    });
+    return;
+  }
+  _renderResponsesList(getResponses());
+}
+
+function _renderResponsesList(all) {
+  const el = document.getElementById('atab-responses');
+  if(!all.length) { el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg><p>No responses yet.</p></div>`; return; }
+
+  const staffCount = all.filter(r=>r.type==='staff').length;
+  const photogCount = all.filter(r=>r.type==='photog').length;
+
+  let html = `<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 20px;flex:1;min-width:140px">
+      <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--accent)">${all.length}</div>
+      <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Total Responses</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 20px;flex:1;min-width:140px">
+      <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--staff)">${staffCount}</div>
+      <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Staff</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 20px;flex:1;min-width:140px">
+      <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--photog)">${photogCount}</div>
+      <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em">Photographers</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-weight:600;font-size:0.88rem">All Submissions</div>
+    <button class="btn btn-danger btn-sm" onclick="clearResponses()">Clear All</button>
+  </div>`;
+
+  for(const r of all) {
+    const qs = getQs(r.type);
+    const isOpen = openResponseId===r.id;
+    html += `<div class="response-card" onclick="toggleResponse(${r.id})">
+      <div class="response-card-top">
+        <span class="rc-type ${r.type==='staff'?'rc-staff':'rc-photog'}">${r.type==='staff'?'Staff':'Photographer'}</span>
+        <span class="rc-name">${h(r.respondent_name||'Unknown')}</span>
+        <span style="font-size:0.75rem;color:var(--muted)">${r.respondent_role?h(r.respondent_role)+' · ':''}</span>
+        <span class="rc-date">${fmtDate(r.submitted_at)}</span>
+        <span style="color:var(--muted);font-size:0.85rem;margin-left:auto">${isOpen?'▲':'▼'}</span>
+      </div>
+      <div class="response-preview${isOpen?' open':''}">
+        ${buildResponseDetail(r, qs)}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function buildResponseDetail(r, qs) {
+  const skip = ['id','type','submitted_at','respondent_name','respondent_role'];
+  let html = '';
+  // Show in question order
+  for(const q of qs) {
+    if(q.t==='section') continue;
+    const name = q.name || '';
+    const val = r[name];
+    if(val) {
+      html += `<div class="rp-row"><span class="rp-q">${h(q.label)}</span><span class="rp-a">${h(val)}</span></div>`;
+    }
+  }
+  // Fallback for any extra keys
+  for(const [k,v] of Object.entries(r)) {
+    if(skip.includes(k)||!v) continue;
+    if(!qs.find(q=>q.name===k)) {
+      html += `<div class="rp-row"><span class="rp-q">${k.replace(/_/g,' ')}</span><span class="rp-a">${h(v)}</span></div>`;
+    }
+  }
+  return html || '<p style="color:var(--muted);font-size:0.82rem">No detailed answers recorded.</p>';
+}
+
+function toggleResponse(id) { openResponseId = openResponseId===id ? null : id; renderResponsesTab(); }
+
+function clearResponses() {
+  if(!confirm('Delete ALL survey responses from the server and this device? This cannot be undone.')) return;
+  const all = getResponses();
+  localStorage.removeItem('survey_responses');
+  if(sessionRole === 'admin' && all.length) {
+    showToast('Deleting all responses from server…');
+    Promise.all(all.map(r => apiDeleteResponse(r.id))).then(() => {
+      showToast('All responses deleted');
+      renderResponsesTab();
+    });
+  } else {
+    renderResponsesTab(); showToast('All responses cleared');
+  }
+}
+
+// ── SETTINGS TAB ──
+function renderSettingsTab() {
+  const el = document.getElementById('atab-settings');
+  el.innerHTML = `
+  <div class="survey-config-section">
+    <div class="survey-config-title">🔑 Change Passwords</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:16px">Update access codes. Share codes verbally or via a private message — not email.</p>
+    <div class="pw-grid">
+      <div class="field"><label>New Staff Code</label><input type="password" id="set-pw-staff" placeholder="New code" autocomplete="new-password"></div>
+      <div class="field"><label>Confirm</label><input type="password" id="set-pw-staff2" placeholder="Confirm" autocomplete="new-password"></div>
+      <div class="field"><label>New Photographer Code</label><input type="password" id="set-pw-photog" placeholder="New code" autocomplete="new-password"></div>
+      <div class="field"><label>Confirm</label><input type="password" id="set-pw-photog2" placeholder="Confirm" autocomplete="new-password"></div>
+      <div class="field"><label>New Admin Password</label><input type="password" id="set-pw-admin" placeholder="New password" autocomplete="new-password"></div>
+      <div class="field"><label>Confirm</label><input type="password" id="set-pw-admin2" placeholder="Confirm" autocomplete="new-password"></div>
+    </div>
+    <div style="margin-top:14px">
+      <button class="btn btn-primary btn-sm" onclick="saveAllPws()">Update Passwords</button>
+    </div>
+  </div>
+  <div class="survey-config-section">
+    <div class="survey-config-title">⚠️ Data Management</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px">All data is stored in this browser's local storage. To back up responses, copy them from the Responses tab. To start fresh for a new year, clear responses below.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-danger btn-sm" onclick="clearResponses()">Clear All Responses</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetAllQs()">Reset All Questions to Defaults</button>
+    </div>
+  </div>`;
+}
+
+function saveAllPws() {
+  const pairs = [
+    ['staff','set-pw-staff','set-pw-staff2','Staff'],
+    ['photog','set-pw-photog','set-pw-photog2','Photographer'],
+    ['admin','set-pw-admin','set-pw-admin2','Admin'],
+  ];
+  let changed = [];
+  for(const [role,id1,id2,lbl] of pairs) {
+    const v1 = document.getElementById(id1).value.trim();
+    const v2 = document.getElementById(id2).value.trim();
+    if(!v1&&!v2) continue;
+    if(v1!==v2){showToast(`${lbl} passwords don't match`);return;}
+    if(v1.length<4){showToast(`${lbl} code must be 4+ characters`);return;}
+    setPw(role,v1); changed.push(lbl);
+    document.getElementById(id1).value=''; document.getElementById(id2).value='';
+  }
+  showToast(changed.length ? changed.join(', ')+' password(s) updated' : 'No changes');
+}
+
+function resetAllQs() {
+  if(confirm('Reset ALL questions to defaults? Custom questions will be lost.')) {
+    localStorage.removeItem('survey_qs_staff'); localStorage.removeItem('survey_qs_photog');
+    showToast('Questions reset to defaults');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('view-'+v);
+  if(el) el.classList.add('active');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('show');}
+function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(iso){return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+
+let toastT;
+function showToast(msg){clearTimeout(toastT);document.getElementById('toast-msg').textContent=msg;const t=document.getElementById('toast');t.classList.add('show');toastT=setTimeout(()=>t.classList.remove('show'),2800);}
+</script>
+</body>
+</html>
