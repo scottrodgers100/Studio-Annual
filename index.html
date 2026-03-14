@@ -932,8 +932,9 @@ function renderSettingsTab() {
       <div class="field"><label>Confirm</label><input type="password" id="set-pw-staff2" placeholder="Confirm" autocomplete="new-password"></div>
       <div class="field"><label>New Photographer Code</label><input type="password" id="set-pw-photog" placeholder="New code" autocomplete="new-password"></div>
       <div class="field"><label>Confirm</label><input type="password" id="set-pw-photog2" placeholder="Confirm" autocomplete="new-password"></div>
-      <div class="field"><label>New Admin Password</label><input type="password" id="set-pw-admin" placeholder="New password" autocomplete="new-password"></div>
-      <div class="field"><label>Confirm</label><input type="password" id="set-pw-admin2" placeholder="Confirm" autocomplete="new-password"></div>
+      <div class="field"><label>New Admin Password</label><p style="font-size:0.78rem;color:var(--muted);background:var(--warm);border:1px solid var(--border);border-radius:6px;padding:10px 13px;margin-top:4px">⚙️ The Admin password is set via the <code>ADMIN_PASSWORD</code> environment variable in Netlify and cannot be changed here.</p></div>
+      <div class="field" style="display:none"><input type="password" id="set-pw-admin" autocomplete="new-password"></div>
+      <div class="field" style="display:none"><input type="password" id="set-pw-admin2" autocomplete="new-password"></div>
     </div>
     <div style="margin-top:14px">
       <button class="btn btn-primary btn-sm" onclick="saveAllPws()">Update Passwords</button>
