@@ -2,7 +2,7 @@ const https = require('https');
 
 const MASTER_KEY = process.env.JSONBIN_MASTER_KEY;
 const BIN_ID = process.env.JSONBIN_BIN_ID;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PW = process.env.ADMIN_PASSWORD || 'admin123';
 
 function jsonbinRequest(method, path) {
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ exports.handler = async (event) => {
 
   // Check admin password from header
   const supplied = event.headers['x-admin-password'];
-  if (!supplied || supplied !== ADMIN_PASSWORD) {
+  if (!supplied || supplied !== ADMIN_PW) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
